@@ -39,22 +39,24 @@ app.post("/api/user", (req, res, next) => {
   } else {
 
     const newUser = new User({
-        Name: req.body.Name,
-        Email: req.body.Number,
-        ContactNum: req.body.ContactNum,
-        Password: req.body.Password,
-        Role: req.body.Role // Admin / User
+      Name: req.body.Name,
+      Email: req.body.Number,
+      ContactNum: req.body.ContactNum,
+      Password: req.body.Password,
+      Role: req.body.Role // Admin / User
     });
 
-    newUser.save().then((data) => {res.send(data)})
-      .catch((err) => {res.status(500).send({message: "an error occured :" + err});
+    newUser.save().then((data) => { res.send(data) })
+      .catch((err) => {
+        res.status(500).send({ message: "an error occured :" + err });
       })
   }
 });
 
 // =========================================================>
 
-app.post("/api/user", (req, res, next) => {
+app.post("/api/user/get", (req, res, next) => {
+  console.log(req.body.filter);
   if (!req.body.filter) {
     res.status(409).send(`
         Please send filter in json body
@@ -63,52 +65,6 @@ app.post("/api/user", (req, res, next) => {
     `);
   } else {
     User.find(req.body.filter, (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      res.status(500).send("error");
-    }
-  });
-}
-});
-
-// =========================================================>
-
-app.post("/api/company", (req, res, next) => {
-    if (!req.body.Email || !req.body.ContactNum || !req.body.BelongTo) {
-      res.status(409).send(` Please send Franchise Name  in json body
-      e.g:
-      "Please Provaide Email & Contact Number":"demo@gmail.com , BelongTo & 03000000000",
-  `);
-      return;
-    } else {
-  
-      const newCompany = new Company({
-          Name: req.body.Name,
-          NTN: req.body.NTn,
-          Email: req.body.Email,
-          ContactNum: req.body.ContactNum,
-          BelongTo: req.body.BelongTo, // Admin Obj Id 
-          NumberOfFranchies: req.body.NumberOfFranchies
-      });
-  
-      newCompany.save().then((data) => {res.send(data)})
-        .catch((err) => {res.status(500).send({message: "an error occured :" + err});
-        })
-    }
-  });
-  
-  // =========================================================>
-  
-  app.post("/api/company", (req, res, next) => {
-    if (!req.body.filter) {
-      res.status(409).send(`
-          Please send filter in json body
-          e.g:
-          "filter":"{}",
-      `);
-    } else {
-      Company.find(req.body.filter, (err, data) => {
       if (!err) {
         res.send(data);
       } else {
@@ -116,44 +72,92 @@ app.post("/api/company", (req, res, next) => {
       }
     });
   }
-  });
+});
+
+// =========================================================>
+
+app.post("/api/company", (req, res, next) => {
+  if (!req.body.Email || !req.body.ContactNum || !req.body.BelongTo) {
+    res.status(409).send(` Please send Franchise Name  in json body
+      e.g:
+      "Please Provaide Email & Contact Number":"demo@gmail.com , BelongTo & 03000000000",
+  `);
+    return;
+  } else {
+
+    const newCompany = new Company({
+      Name: req.body.Name,
+      NTN: req.body.NTn,
+      Email: req.body.Email,
+      ContactNum: req.body.ContactNum,
+      BelongTo: req.body.BelongTo, // Admin Obj Id 
+      NumberOfFranchies: req.body.NumberOfFranchies
+    });
+
+    newCompany.save().then((data) => { res.send(data) })
+      .catch((err) => {
+        res.status(500).send({ message: "an error occured :" + err });
+      })
+  }
+});
+
+// =========================================================>
+
+app.post("/api/company/get", (req, res, next) => {
+  if (!req.body.filter) {
+    res.status(409).send(`
+          Please send filter in json body
+          e.g:
+          "filter":"{}",
+      `);
+  } else {
+    Company.find(req.body.filter, (err, data) => {
+      if (!err) {
+        res.send(data);
+      } else {
+        res.status(500).send("error");
+      }
+    });
+  }
+});
 
 
 
 // =========================================================>
 
 app.post("/api/visitor", (req, res, next) => {
-    if (!req.body.Email || !req.body.ContactNum) {
-      res.status(409).send(` Please send Franchise Name  in json body
+  if (!req.body.Email || !req.body.ContactNum) {
+    res.status(409).send(` Please send Franchise Name  in json body
       e.g:
       "Please Provaide Email & Contact Number":"demo@gmail.com  & 03000000000",
   `);
-      return;
-    } else {
-  
-      const newvisitor = new Visitor({
-          Name: req.body.Name,
-          Email: req.body.Email,
-          ContactNum: req.body.ContactNum
-      });
-  
-      newvisitor.save().then((data) => {res.send(data)})
-        .catch((err) => {res.status(500).send({message: "an error occured :" + err});
-        })
-    }
-  });
-  
-  // =========================================================>
-  
-  app.post("/api/visitor", (req, res, next) => {
-    if (!req.body.filter) {
-      res.status(409).send(`
+    return;
+  } else {
+
+    const newvisitor = new Visitor({
+      Name: req.body.Name,
+      Email: req.body.Email,
+      ContactNum: req.body.ContactNum
+    });
+
+    newvisitor.save().then((data) => { res.send(data) })
+      .catch((err) => {
+        res.status(500).send({ message: "an error occured :" + err });
+      })
+  }
+});
+
+// =========================================================>
+
+app.post("/api/visitor/get", (req, res, next) => {
+  if (!req.body.filter) {
+    res.status(409).send(`
           Please send filter in json body
           e.g:
           "filter":"{}",
       `);
-    } else {
-      Visitor.find(req.body.filter, (err, data) => {
+  } else {
+    Visitor.find(req.body.filter, (err, data) => {
       if (!err) {
         res.send(data);
       } else {
@@ -161,46 +165,47 @@ app.post("/api/visitor", (req, res, next) => {
       }
     });
   }
-  });
+});
 
-  // =========================================================>
+// =========================================================>
 
-  app.post("/api/franchise", (req, res, next) => {
-    if (!req.body.Email || !req.body.ContactNum) {
-      res.status(409).send(` Please send Franchise Name  in json body
+app.post("/api/franchise", (req, res, next) => {
+  if (!req.body.Email || !req.body.ContactNum) {
+    res.status(409).send(` Please send Franchise Name  in json body
       e.g:
       "Please Provaide Email & Contact Number":"demo@gmail.com  & 03000000000",
   `);
-      return;
-    } else {
-  
-      const newfranchise = new Franchise({
-          Name: req.body.Name,
-          Address: req.body.Address,
-          BelongTo: req.body.BelongTo,
-          TokenCustomer: req.body.TokenCustomer,
-          CurrentToken: req.body.CurrentToken,
-          StartTime: req.body.StartTime,
-          EndTime: req.body.EndTime
-      });
-  
-      newfranchise.save().then((data) => {res.send(data)})
-        .catch((err) => {res.status(500).send({message: "an error occured :" + err});
-        })
-    }
-  });
-  
-  // =========================================================>
-  
-  app.post("/api/franchise", (req, res, next) => {
-    if (!req.body.filter) {
-      res.status(409).send(`
+    return;
+  } else {
+
+    const newfranchise = new Franchise({
+      Name: req.body.Name,
+      Address: req.body.Address,
+      BelongTo: req.body.BelongTo,
+      TokenCustomer: req.body.TokenCustomer,
+      CurrentToken: req.body.CurrentToken,
+      StartTime: req.body.StartTime,
+      EndTime: req.body.EndTime
+    });
+
+    newfranchise.save().then((data) => { res.send(data) })
+      .catch((err) => {
+        res.status(500).send({ message: "an error occured :" + err });
+      })
+  }
+});
+
+// =========================================================>
+
+app.post("/api/franchise/get", (req, res, next) => {
+  if (!req.body.filter) {
+    res.status(409).send(`
           Please send filter in json body
           e.g:
           "filter":"{}",
       `);
-    } else {
-      Franchise.find(req.body.filter, (err, data) => {
+  } else {
+    Franchise.find(req.body.filter, (err, data) => {
       if (!err) {
         res.send(data);
       } else {
@@ -208,15 +213,15 @@ app.post("/api/visitor", (req, res, next) => {
       }
     });
   }
-  });
+});
 
-  // =========================================================>
+// =========================================================>
 
 
 app.post("/api/token", (req, res, next) => {
   var newNumber = 0;
 
-  if (!req.body.FranchiseId ) {
+  if (!req.body.FranchiseId) {
     res.status(409).send(` Please send Franchise obj  in json body
     e.g:
     "Please Provaide Franchise Id",
@@ -230,21 +235,21 @@ app.post("/api/token", (req, res, next) => {
           doc.CurrntTokenNumber = newNumber;
 
           const newfranchise = new Franchise({
-              TokenNumber: TokenNumber, //newNumber
-              IssueTime: req.body.IssueTime,
-              FranchiseId: req.body.FranchiseId,
-              AttendedTime: req.body.AttendedTime,
+            TokenNumber: TokenNumber, //newNumber
+            IssueTime: req.body.IssueTime,
+            FranchiseId: req.body.FranchiseId,
+            AttendedTime: req.body.AttendedTime,
           });
 
-        //   newToken.save();
-        //   doc.Token.push(newToken);
-        //   doc.save();
-        //   res.send(doc);
+          //   newToken.save();
+          //   doc.Token.push(newToken);
+          //   doc.save();
+          //   res.send(doc);
 
-        newfranchise.save().then((data) => {res.send(data)}).catch((error) => {
-              res.status(500).send({
-                  message: "an error occured : " + error,
-              });
+          newfranchise.save().then((data) => { res.send(data) }).catch((error) => {
+            res.status(500).send({
+              message: "an error occured : " + error,
+            });
           });
         } else {
           res.status(409).send(err);
@@ -256,7 +261,7 @@ app.post("/api/token", (req, res, next) => {
 
 
 
-app.post("/api/token", (req, res, next) => {
+app.post("/api/token/get", (req, res, next) => {
   if (!req.body.filter) {
     res.status(409).send(`
         Please send filter in json body
@@ -265,21 +270,21 @@ app.post("/api/token", (req, res, next) => {
     `);
   } else {
     Token.find(req.body.filter, (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      res.status(500).send("error");
-    }
-  });
-}
+      if (!err) {
+        res.send(data);
+      } else {
+        res.status(500).send("error");
+      }
+    });
+  }
 });
 
 // =========================================================>
 
 app.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`);
-  });
-  
+  console.log(`http://localhost:${PORT}`);
+});
+
 
 
 // get All Data FranchiseObjectID in Token number
